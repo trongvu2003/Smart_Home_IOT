@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.smart_home_iot.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
 
 @Composable
 fun LoginScreen(
@@ -31,7 +32,18 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
+        Image(
+            painter = painterResource(id = R.drawable.anhnen),
+            contentDescription = "Splash Background",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,7 +89,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "Forgot Password?",
-                color = Color(0xFF1976D2),
+                color = Color(0xFFFFF9C4),
                 fontSize = 14.sp,
                 modifier = Modifier
                     .align(Alignment.End)
@@ -103,7 +115,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     "Signup",
-                    color = Color(0xFF1976D2),
+                    color = Color(0xFFFFF9C4),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { onSignup() }
                 )

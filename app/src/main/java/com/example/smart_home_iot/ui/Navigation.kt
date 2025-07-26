@@ -13,7 +13,7 @@ fun AppNavHost(
 ) {
     NavHost(navController = navController, startDestination = "splash", modifier = modifier) {
         composable("splash") {
-            SplashScreen(onOpenApp = { navController.navigate("login") { popUpTo("splash") { inclusive = true } } })
+            WelcomeScreen(onOpenApp = { navController.navigate("login") { popUpTo("splash") { inclusive = true } } })
         }
         composable("login") {
             LoginScreen(
