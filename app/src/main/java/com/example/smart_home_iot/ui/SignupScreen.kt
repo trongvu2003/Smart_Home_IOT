@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.smart_home_iot.R
 
@@ -34,7 +35,18 @@ fun SignupScreen(
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
 
+        Image(
+            painter = painterResource(id = R.drawable.anhnen),
+            contentDescription = "Background",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,7 +129,7 @@ fun SignupScreen(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     "Login",
-                    color = Color(0xFF1976D2),
+                    color = Color(0xFFFFF9C4),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { onLogin() }
                 )

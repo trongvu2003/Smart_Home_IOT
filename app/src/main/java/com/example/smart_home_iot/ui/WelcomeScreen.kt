@@ -21,15 +21,15 @@ import androidx.compose.ui.unit.sp
 import com.example.smart_home_iot.R
 
 @Composable
-fun SplashScreen(onOpenApp: () -> Unit) {
+fun WelcomeScreen(onOpenApp: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.splash),
-            contentDescription = "Splash Background",
+            painter = painterResource(id = R.drawable.anhnen),
+            contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
