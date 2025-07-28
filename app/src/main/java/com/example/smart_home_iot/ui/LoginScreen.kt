@@ -20,6 +20,8 @@ import com.example.smart_home_iot.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(
@@ -27,11 +29,13 @@ fun LoginScreen(
     onSignup: () -> Unit = {},
     onForgotPassword: () -> Unit = {},
     onFacebookLogin: () -> Unit = {},
-    onGoogleLogin: () -> Unit = {}
+    onGoogleLogin: () -> Unit = {},
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -97,7 +101,20 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = onLogin,
+                onClick = {
+                    isLoading = true
+                    errorMessage = null
+                    val auth = FirebaseAuth.getInstance()
+                    auth.signInWithEmailAndPassword(username, password)
+                        .addOnCompleteListener { task ->
+                            isLoading = false
+                            if (task.isSuccessful) {
+                                onLogin()
+                            } else {
+                                errorMessage = task.exception?.message ?: "Login failed"
+                            }
+                        }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -105,6 +122,15 @@ fun LoginScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
             ) {
                 Text("Login", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
+
+            errorMessage?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(it, color = Color.Red, fontSize = 14.sp)
+            }
+            if (isLoading) {
+                Spacer(modifier = Modifier.height(8.dp))
+                CircularProgressIndicator()
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(
