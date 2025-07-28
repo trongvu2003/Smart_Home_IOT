@@ -2,6 +2,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
@@ -10,22 +11,28 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import coil3.compose.AsyncImage
 import com.example.smart_home_iot.ui.home.AddDeviceDialog
 import com.example.smart_home_iot.ui.home.AddRoomDialog
 import com.example.smart_home_iot.ui.home.RoomCard
 import com.example.smart_home_iot.viewmodel.HomeViewModel
 import com.example.smart_house.data.firebase.UserRepository
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import androidx.lifecycle.viewmodel.compose.viewModel as viewModel1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit = {},
-    homeViewModel: HomeViewModel = viewModel1()
+    homeViewModel: HomeViewModel = viewModel1(),
+    navController: NavHostController = rememberNavController(),
 ) {
     val rooms by homeViewModel.rooms.collectAsState()
     val isLoading by homeViewModel.isLoading.collectAsState()
@@ -39,6 +46,9 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         username= UserRepository.getUserName()
     }
+    val defaultAvatarUrl = "https://static.vecteezy.com/system/resources/previews/026/619/142/original/default-avatar-profile-icon-of-social-media-user-photo-image-vector.jpg"
+    val user = Firebase.auth.currentUser
+    val avatarUrl = user?.photoUrl?.toString() ?: defaultAvatarUrl
 
     Scaffold(
         topBar = {
@@ -100,10 +110,35 @@ fun HomeScreen(
             ) {
                 item {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Xin chào, $username!", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                    Text("Chào mừng bạn trở về nhà.", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            AsyncImage(
+                                model = avatarUrl,
+                                contentDescription = "Avatar",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(RoundedCornerShape(20.dp))
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Xin chào, $username!",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold
+                            )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Chào mừng bạn trở về nhà.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+
                 item {
                     Text("Các phòng", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
                 }
