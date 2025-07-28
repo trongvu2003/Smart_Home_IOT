@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "829193657406",
+    "project_id": "smart-house-dd323",
+    "storage_bucket": "smart-house-dd323.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:829193657406:android:a1ddd2ff38e6f9f243c56f",
+        "android_client_info": {
+          "package_name": "com.example.smart_home_iot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "829193657406-uu1vkgvdk0cm4b3kagsn7t4dd13bo8en.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_home_iot",
+            "certificate_hash": "e33637742021efae4abbc876e7197b6b746e5cc0"
+          }
+        },
+        {
+          "client_id": "829193657406-5jv7fhck76b94hk7najic2dmjsdc46pa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNhspCSQamu6xjSCPGRaqFzHJ283EPwmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "829193657406-5jv7fhck76b94hk7najic2dmjsdc46pa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
