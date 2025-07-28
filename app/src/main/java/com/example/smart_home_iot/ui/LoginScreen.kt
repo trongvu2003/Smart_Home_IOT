@@ -20,12 +20,11 @@ import com.example.smart_home_iot.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import com.google.firebase.auth.FirebaseAuth
+import com.example.smart_home_iot.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    onLogin: () -> Unit = {},
+    authViewModel: AuthViewModel,
     onSignup: () -> Unit = {},
     onForgotPassword: () -> Unit = {},
     onFacebookLogin: () -> Unit = {},
@@ -34,8 +33,8 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
+    val isLoading by authViewModel.isLoading.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -102,19 +101,9 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Button(
                 onClick = {
-                    isLoading = true
-                    errorMessage = null
-                    val auth = FirebaseAuth.getInstance()
-                    auth.signInWithEmailAndPassword(username, password)
-                        .addOnCompleteListener { task ->
-                            isLoading = false
-                            if (task.isSuccessful) {
-                                onLogin()
-                            } else {
-                                errorMessage = task.exception?.message ?: "Login failed"
-                            }
-                        }
+                    authViewModel.login(username, password)
                 },
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -124,10 +113,7 @@ fun LoginScreen(
                 Text("Login", fontWeight = FontWeight.Bold, fontSize = 16.sp)
             }
 
-            errorMessage?.let {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(it, color = Color.Red, fontSize = 14.sp)
-            }
+
             if (isLoading) {
                 Spacer(modifier = Modifier.height(8.dp))
                 CircularProgressIndicator()
