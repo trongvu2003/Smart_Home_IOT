@@ -27,14 +27,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.asImageBitmap
 import com.google.firebase.auth.FirebaseAuth
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit = {},
-    onSwitchAccount: () -> Unit = {},
+    onBack: () -> Unit,
     viewModel: ProfileViewModel = viewModel()
 ) {
     val email by viewModel.email.collectAsState()
@@ -136,19 +139,41 @@ fun ProfileScreen(
             }
         )
     }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "Thông tin cá nhân",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Quay lại"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black,
+                    navigationIconContentColor = Color.Black
+                )
+            )
+        },
+        containerColor = Color.White
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -248,10 +273,13 @@ fun ProfileScreen(
                     Text("Đổi mật khẩu", fontSize = 16.sp, fontWeight = FontWeight.Medium)
                 }
             }
-            Spacer(modifier = Modifier.height(300.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
             Button(
                 onClick = { viewModel.onLogout(onLogout) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2))
             ) {

@@ -51,9 +51,18 @@ fun AppNavHost(
         }
         composable("profile") {
             ProfileScreen(
-                onLogout = { authViewModel.logout() },
-                onSwitchAccount = {  },
+                onLogout = {
+                    navController.navigate("login") {
+                        popUpTo(0)
+                    }
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
             )
+        }
+        composable("notifications") {
+            NotificationScreen(navController = navController)
         }
     }
     DisposableEffect(navController) {
