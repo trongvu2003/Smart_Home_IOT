@@ -44,7 +44,16 @@ fun AppNavHost(
             )
         }
         composable("home") {
-            HomeScreen(onLogout = { authViewModel.logout() })
+            HomeScreen(
+                onLogout = { authViewModel.logout() },
+                navController = navController
+            )
+        }
+        composable("profile") {
+            ProfileScreen(
+                onLogout = { authViewModel.logout() },
+                onSwitchAccount = {  },
+            )
         }
     }
     DisposableEffect(navController) {

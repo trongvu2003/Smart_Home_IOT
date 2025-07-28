@@ -20,12 +20,14 @@ import com.example.smart_home_iot.viewmodel.HomeViewModel
 import com.example.smart_house.data.firebase.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel as viewModel1
+import androidx.compose.material.icons.filled.AccountCircle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     onLogout: () -> Unit = {},
-    homeViewModel: HomeViewModel = viewModel1()
+    homeViewModel: HomeViewModel = viewModel1(),
+    navController: androidx.navigation.NavHostController
 ) {
     val rooms by homeViewModel.rooms.collectAsState()
     val isLoading by homeViewModel.isLoading.collectAsState()
@@ -45,7 +47,10 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Smart House", fontWeight = FontWeight.Bold) },
                 actions = {
-                    IconButton(onClick = {  }) { Icon(Icons.Default.Notifications, contentDescription = "Thông báo") }
+                    IconButton(onClick = { /* TODO: Thông báo */ }) { Icon(Icons.Default.Notifications, contentDescription = "Thông báo") }
+                    IconButton(onClick = { navController.navigate("profile") }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Tài khoản")
+                    }
                     IconButton(onClick = onLogout) { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Đăng xuất") }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
