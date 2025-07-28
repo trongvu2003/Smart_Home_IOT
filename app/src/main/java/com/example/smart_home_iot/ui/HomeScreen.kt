@@ -26,6 +26,7 @@ import com.example.smart_house.data.firebase.UserRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import androidx.lifecycle.viewmodel.compose.viewModel as viewModel1
+import androidx.compose.material.icons.filled.AccountCircle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +56,12 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Smart House", fontWeight = FontWeight.Bold) },
                 actions = {
-                    IconButton(onClick = {  }) { Icon(Icons.Default.Notifications, contentDescription = "Thông báo") }
+                    IconButton(onClick = { navController.navigate("notifications") }) {
+                        Icon(Icons.Default.Notifications, contentDescription = "Thông báo")
+                    }
+                    IconButton(onClick = { navController.navigate("profile") }) {
+                        Icon(Icons.Default.AccountCircle, contentDescription = "Tài khoản")
+                    }
                     IconButton(onClick = onLogout) { Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Đăng xuất") }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
@@ -138,7 +144,6 @@ fun HomeScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
                 item {
                     Text("Các phòng", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
                 }

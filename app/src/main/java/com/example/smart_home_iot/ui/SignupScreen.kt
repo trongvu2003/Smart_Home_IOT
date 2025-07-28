@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.example.smart_home_iot.R
 import com.example.smart_home_iot.viewmodel.AuthViewModel
+import android.content.Context
 
 @Composable
 fun SignupScreen(
