@@ -1,82 +1,72 @@
 package com.example.smart_home_iot.ui
 
-import androidx.compose.runtime.*
+import HomeScreen
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.smart_home_iot.viewmodel.AuthViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
-    onGoogleLogin: () -> Unit = {}
+    navController: NavHostController = rememberNavController(),
+    authViewModel: AuthViewModel = viewModel(),
+    onGoogleLogin: () -> Unit,
 ) {
     NavHost(navController = navController, startDestination = "splash", modifier = modifier) {
         composable("splash") {
-            val auth = FirebaseAuth.getInstance()
-            val onOpenApp: () -> Unit = {
-                val destination = if (auth.currentUser != null) "home" else "login"
-                navController.navigate(destination) {
+            WelcomeScreen(onOpenApp = {
+                navController.navigate("login") {
                     popUpTo("splash") { inclusive = true }
                 }
-            }
-            WelcomeScreen(onOpenApp = onOpenApp)
+            })
         }
         composable("login") {
             LoginScreen(
-                onLogin = {
-                    navController.navigate("home") {
-                        popUpTo("login") { inclusive = true }
-                    }
-                },
-                onGoogleLogin = onGoogleLogin,
-                onSignup = { navController.navigate("signup") }
+                authViewModel = authViewModel,
+                onSignup = { navController.navigate("signup") },
+                onGoogleLogin = onGoogleLogin
             )
         }
         composable("signup") {
             SignupScreen(
-                onSignup = {},
-                onLogin = { navController.popBackStack() },
+                authViewModel = authViewModel,
+                onLogin = { navController.navigateUp() },
                 onFacebookLogin = {},
                 onGoogleLogin = onGoogleLogin
             )
         }
         composable("home") {
-            HomeScreen(onLogout = {
-                FirebaseAuth.getInstance().signOut()
-            })
+            HomeScreen(onLogout = { authViewModel.logout() })
         }
     }
     DisposableEffect(navController) {
-        val auth = FirebaseAuth.getInstance()
-        val listener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val currentUser = firebaseAuth.currentUser
+        val listener = FirebaseAuth.AuthStateListener { auth ->
             val currentRoute = navController.currentBackStackEntry?.destination?.route
-
-            if (currentUser != null) {
+            if (auth.currentUser != null) {
                 if (currentRoute != "home") {
                     navController.navigate("home") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = true
-                        }
+                        popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                     }
                 }
             } else {
-                if (currentRoute != "login") {
+                if (currentRoute != "login" && currentRoute != "splash") {
                     navController.navigate("login") {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = true
-                        }
+                        popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                     }
                 }
             }
         }
-        auth.addAuthStateListener(listener)
+        FirebaseAuth.getInstance().addAuthStateListener(listener)
         onDispose {
-            auth.removeAuthStateListener(listener)
+            FirebaseAuth.getInstance().removeAuthStateListener(listener)
         }
     }
 }

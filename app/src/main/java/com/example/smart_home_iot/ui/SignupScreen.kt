@@ -1,5 +1,6 @@
 package com.example.smart_home_iot.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,24 +18,26 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.example.smart_home_iot.R
+import com.example.smart_home_iot.viewmodel.AuthViewModel
 
 @Composable
 fun SignupScreen(
-    onSignup: () -> Unit = {},
-    onLogin: () -> Unit = {},
-    onFacebookLogin: () -> Unit = {},
-    onGoogleLogin: () -> Unit = {}
+    authViewModel: AuthViewModel,
+    onLogin: () -> Unit,
+    onFacebookLogin: () -> Unit,
+    onGoogleLogin: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val isLoading by authViewModel.isLoading.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -111,7 +114,14 @@ fun SignupScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = onSignup,
+                onClick = {
+                    if (username.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && password.isNotBlank()) {
+                        authViewModel.signup(username, email, phone, password)
+                    } else {
+                        Toast.makeText(context, "Vui lòng điền đầy đủ thông tin", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                enabled = !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
